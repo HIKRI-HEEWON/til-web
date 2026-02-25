@@ -1,0 +1,806 @@
+{
+  "tasks": [
+    {
+      "id": "31965ca3-d03c-4326-86d2-613e0c1a759e",
+      "name": "Task 001: Notion API 환경변수 설정",
+      "description": ".env.local 파일에 NOTION_API_KEY, NOTION_DATABASE_ID, REVALIDATE_SECRET 환경변수를 추가하고, .env.example 파일로 필요한 환경변수 목록을 문서화한다.",
+      "status": "completed",
+      "dependencies": [],
+      "createdAt": "2026-02-25T07:19:01.389Z",
+      "updatedAt": "2026-02-25T07:19:21.168Z",
+      "relatedFiles": [
+        {
+          "path": ".env.local",
+          "type": "CREATE",
+          "description": "실제 환경변수 파일 (gitignore 대상)"
+        },
+        {
+          "path": ".env.example",
+          "type": "CREATE",
+          "description": "환경변수 목록 문서화 파일"
+        }
+      ],
+      "implementationGuide": "1. .env.local 파일 생성 - NOTION_API_KEY, NOTION_DATABASE_ID 필수값 플레이스홀더, REVALIDATE_SECRET 선택값 플레이스홀더 추가\n2. .env.example 파일 생성 - Notion Integration 생성 방법, DATABASE_ID 추출 방법 주석 포함\n3. .gitignore에 .env.local 포함 여부 확인",
+      "verificationCriteria": ".env.local 파일에 3개 환경변수 항목 존재, .env.example 파일에 설정 방법 주석 포함",
+      "analysisResult": "TIL 피드 웹사이트 Phase 1 환경 설정. Notion API 연동을 위한 환경변수, 이미지 도메인, SDK 설치, 클라이언트 초기화, 환경변수 검증 스키마를 구성한다. 모든 작업은 Next.js 15.5.3 App Router 기반이며 TypeScript strict 모드를 준수한다.",
+      "summary": ".env.local 파일에 NOTION_API_KEY, NOTION_DATABASE_ID, REVALIDATE_SECRET 3개 환경변수 플레이스홀더 추가 완료. .env.example 파일에 Notion Integration 생성 방법 및 DATABASE_ID 추출 방법 주석 포함하여 문서화 완료.",
+      "completedAt": "2026-02-25T07:19:21.167Z"
+    },
+    {
+      "id": "ce7ea1bd-f961-4d74-88b8-7516d1cde616",
+      "name": "Task 002: Next.js 이미지 도메인 설정",
+      "description": "next.config.ts에 Notion 관련 이미지 도메인을 remotePatterns으로 등록하여 next/image 컴포넌트에서 Notion 이미지를 사용할 수 있도록 한다.",
+      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "31965ca3-d03c-4326-86d2-613e0c1a759e"
+        }
+      ],
+      "createdAt": "2026-02-25T07:19:01.389Z",
+      "updatedAt": "2026-02-25T07:19:37.695Z",
+      "relatedFiles": [
+        {
+          "path": "next.config.ts",
+          "type": "TO_MODIFY",
+          "description": "Next.js 설정 파일",
+          "lineStart": 1,
+          "lineEnd": 40
+        }
+      ],
+      "implementationGuide": "next.config.ts의 images 옵션에 remotePatterns 배열 추가:\n- www.notion.so\n- *.notion.so (와일드카드)\n- images.unsplash.com\n- s3.us-west-2.amazonaws.com\n- prod-files-secure.s3.us-west-2.amazonaws.com",
+      "verificationCriteria": "next.config.ts에 remotePatterns 5개 도메인 등록, TypeScript 타입 에러 없음",
+      "analysisResult": "TIL 피드 웹사이트 Phase 1 환경 설정. Notion API 연동을 위한 환경변수, 이미지 도메인, SDK 설치, 클라이언트 초기화, 환경변수 검증 스키마를 구성한다. 모든 작업은 Next.js 15.5.3 App Router 기반이며 TypeScript strict 모드를 준수한다.",
+      "summary": "next.config.ts에 remotePatterns 5개 도메인 등록 완료 (www.notion.so, *.notion.so, images.unsplash.com, s3.us-west-2.amazonaws.com, prod-files-secure.s3.us-west-2.amazonaws.com). TypeScript 타입 에러 없음 확인.",
+      "completedAt": "2026-02-25T07:19:37.694Z"
+    },
+    {
+      "id": "b5e8a806-9ec7-4417-9942-aab5649eec51",
+      "name": "Task 003: Notion SDK 패키지 설치",
+      "description": "Notion API 연동 및 마크다운 렌더링에 필요한 패키지를 설치한다: @notionhq/client, notion-to-md, react-markdown, remark-gfm",
+      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "31965ca3-d03c-4326-86d2-613e0c1a759e"
+        }
+      ],
+      "createdAt": "2026-02-25T07:19:01.389Z",
+      "updatedAt": "2026-02-25T07:19:46.650Z",
+      "relatedFiles": [
+        {
+          "path": "package.json",
+          "type": "TO_MODIFY",
+          "description": "패키지 의존성 파일"
+        }
+      ],
+      "implementationGuide": "npm install @notionhq/client notion-to-md react-markdown remark-gfm 실행\n- @notionhq/client: Notion 공식 SDK\n- notion-to-md: Notion 블록을 마크다운으로 변환\n- react-markdown: 마크다운을 React 컴포넌트로 렌더링\n- remark-gfm: GitHub Flavored Markdown 지원",
+      "verificationCriteria": "package.json dependencies에 4개 패키지 추가, node_modules에 설치 완료",
+      "analysisResult": "TIL 피드 웹사이트 Phase 1 환경 설정. Notion API 연동을 위한 환경변수, 이미지 도메인, SDK 설치, 클라이언트 초기화, 환경변수 검증 스키마를 구성한다. 모든 작업은 Next.js 15.5.3 App Router 기반이며 TypeScript strict 모드를 준수한다.",
+      "summary": "4개 패키지 설치 완료: @notionhq/client ^5.9.0, notion-to-md ^3.1.9, react-markdown ^10.1.0, remark-gfm ^4.0.1. package.json dependencies에 정상 등록, node_modules 설치 완료.",
+      "completedAt": "2026-02-25T07:19:46.649Z"
+    },
+    {
+      "id": "b0b8a418-e589-41f8-ae97-8ef595b032f0",
+      "name": "Task 004: Notion 클라이언트 초기화 모듈 생성",
+      "description": "src/lib/notion.ts 파일을 생성하여 Notion Client와 NotionToMarkdown 인스턴스를 초기화한다. 환경변수 미설정 시 명확한 한국어 에러 메시지를 출력한다.",
+      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "b5e8a806-9ec7-4417-9942-aab5649eec51"
+        }
+      ],
+      "createdAt": "2026-02-25T07:19:01.389Z",
+      "updatedAt": "2026-02-25T07:19:55.609Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/notion.ts",
+          "type": "CREATE",
+          "description": "Notion 클라이언트 초기화 모듈"
+        }
+      ],
+      "implementationGuide": "src/lib/notion.ts 생성:\n1. process.env에서 NOTION_API_KEY, NOTION_DATABASE_ID 읽기\n2. 각 값이 없으면 throw new Error('명확한 에러 메시지')\n3. new Client({ auth: notionApiKey }) 초기화\n4. new NotionToMarkdown({ notionClient: notion }) 초기화\n5. notion, n2m, DATABASE_ID export",
+      "verificationCriteria": "notion, n2m, DATABASE_ID 3개 export, 환경변수 미설정 시 에러 throw, TypeScript 타입 에러 없음",
+      "analysisResult": "TIL 피드 웹사이트 Phase 1 환경 설정. Notion API 연동을 위한 환경변수, 이미지 도메인, SDK 설치, 클라이언트 초기화, 환경변수 검증 스키마를 구성한다. 모든 작업은 Next.js 15.5.3 App Router 기반이며 TypeScript strict 모드를 준수한다.",
+      "summary": "src/lib/notion.ts 생성 완료. notion(Client), n2m(NotionToMarkdown), DATABASE_ID 3개 export. 환경변수 미설정 시 한국어 에러 메시지 throw 구현. TypeScript 타입 에러 없음 확인.",
+      "completedAt": "2026-02-25T07:19:55.605Z"
+    },
+    {
+      "id": "2b89a43d-5313-461a-a6f3-70fc453588a1",
+      "name": "Task 005: 환경변수 검증 스키마 업데이트",
+      "description": "src/lib/env.ts의 Zod 스키마에 NOTION_API_KEY(필수), NOTION_DATABASE_ID(필수), REVALIDATE_SECRET(선택) 검증을 추가하여 빌드 타임에 환경변수 누락을 감지한다.",
+      "status": "completed",
+      "dependencies": [
+        {
+          "taskId": "b5e8a806-9ec7-4417-9942-aab5649eec51"
+        }
+      ],
+      "createdAt": "2026-02-25T07:19:01.389Z",
+      "updatedAt": "2026-02-25T07:20:01.670Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/env.ts",
+          "type": "TO_MODIFY",
+          "description": "환경변수 검증 스키마 파일",
+          "lineStart": 1,
+          "lineEnd": 18
+        }
+      ],
+      "implementationGuide": "src/lib/env.ts 수정:\n1. envSchema에 NOTION_API_KEY: z.string().min(1, '에러 메시지') 추가\n2. envSchema에 NOTION_DATABASE_ID: z.string().min(1, '에러 메시지') 추가\n3. envSchema에 REVALIDATE_SECRET: z.string().optional() 추가\n4. envSchema.parse() 호출부에 3개 값 추가",
+      "verificationCriteria": "Zod 스키마에 3개 환경변수 검증 추가, 환경변수 누락 시 parse 에러 발생, TypeScript 타입 에러 없음",
+      "analysisResult": "TIL 피드 웹사이트 Phase 1 환경 설정. Notion API 연동을 위한 환경변수, 이미지 도메인, SDK 설치, 클라이언트 초기화, 환경변수 검증 스키마를 구성한다. 모든 작업은 Next.js 15.5.3 App Router 기반이며 TypeScript strict 모드를 준수한다.",
+      "summary": "src/lib/env.ts Zod 스키마에 NOTION_API_KEY(필수, min(1)), NOTION_DATABASE_ID(필수, min(1)), REVALIDATE_SECRET(선택, optional()) 3개 검증 추가 완료. envSchema.parse() 호출부에도 3개 값 연결. TypeScript 타입 에러 없음 확인.",
+      "completedAt": "2026-02-25T07:20:01.670Z"
+    },
+    {
+      "id": "ec53d20e-598d-4c9c-91fa-ff8b8bc3d983",
+      "name": "Task 006: TIL 타입 정의",
+      "description": "src/types/til.ts 파일을 생성하여 TIL 관련 모든 타입을 정의한다. TilCategory, TilStatus, Til, TilDetail, FilterParams 타입을 포함한다.",
+      "status": "pending",
+      "dependencies": [],
+      "createdAt": "2026-02-25T07:47:46.259Z",
+      "updatedAt": "2026-02-25T07:47:46.259Z",
+      "relatedFiles": [
+        {
+          "path": "src/types/til.ts",
+          "type": "CREATE",
+          "description": "TIL 타입 정의 파일"
+        }
+      ],
+      "implementationGuide": "src/types/til.ts 생성:\\n- TilCategory: 'Backend' | 'Frontend' | 'DevOps' | 'CS'\\n- TilStatus: 'Published' | 'Draft'\\n- Til: { id, title, content, category, tags, date, status }\\n- TilDetail: Til 확장 + body(마크다운 본문)\\n- FilterParams: { category?: TilCategory, tags?: string[] }",
+      "verificationCriteria": "5개 타입 export, TypeScript strict 모드 에러 없음, any 타입 미사용",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트 전체 개발. Next.js 15.5.3 App Router, TypeScript 5, TailwindCSS v4, shadcn/ui new-york, Notion API 연동. Phase 1 완료 상태에서 Phase 2~5를 순서대로 구현한다."
+    },
+    {
+      "id": "8447827c-45e6-411e-aa16-30db8a11c549",
+      "name": "Task 007: Notion API 조회 함수 구현",
+      "description": "src/lib/notion-api.ts 파일을 생성하여 Notion DB 조회 함수를 구현한다. getTilList, getTilById, getTilContent, getAllTilIds, getCategories 함수를 포함한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "b0b8a418-e589-41f8-ae97-8ef595b032f0"
+        },
+        {
+          "taskId": "ec53d20e-598d-4c9c-91fa-ff8b8bc3d983"
+        }
+      ],
+      "createdAt": "2026-02-25T07:47:46.259Z",
+      "updatedAt": "2026-02-25T07:47:46.259Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/notion-api.ts",
+          "type": "CREATE",
+          "description": "Notion DB 조회 함수 모음"
+        },
+        {
+          "path": "src/lib/notion.ts",
+          "type": "REFERENCE",
+          "description": "Notion Client 인스턴스"
+        },
+        {
+          "path": "src/types/til.ts",
+          "type": "REFERENCE",
+          "description": "TIL 타입"
+        }
+      ],
+      "implementationGuide": "src/lib/notion-api.ts 생성:\\n- notion.ts에서 notion, n2m, DATABASE_ID import\\n- getTilList(filter?: FilterParams): Til[] - Status=Published 필터, Date 내림차순\\n- getTilById(id: string): Til | null\\n- getTilContent(id: string): string - n2m으로 마크다운 변환\\n- getAllTilIds(): string[] - generateStaticParams용\\n- getCategories(): TilCategory[]\\n- Notion API 응답을 Til/TilDetail 타입으로 파싱하는 헬퍼 함수",
+      "verificationCriteria": "5개 함수 export, Til/TilDetail 타입으로 반환, TypeScript 에러 없음",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트 전체 개발. Next.js 15.5.3 App Router, TypeScript 5, TailwindCSS v4, shadcn/ui new-york, Notion API 연동. Phase 1 완료 상태에서 Phase 2~5를 순서대로 구현한다."
+    },
+    {
+      "id": "0eddee75-f997-4a5b-8685-cad108cf26ef",
+      "name": "Task 008: 유틸리티 함수 추가",
+      "description": "src/lib/utils.ts에 날짜 포맷 함수와 TIL 그룹핑 함수를 추가한다. 기존 cn() 함수는 유지한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "ec53d20e-598d-4c9c-91fa-ff8b8bc3d983"
+        }
+      ],
+      "createdAt": "2026-02-25T07:47:46.259Z",
+      "updatedAt": "2026-02-25T07:47:46.259Z",
+      "relatedFiles": [
+        {
+          "path": "src/lib/utils.ts",
+          "type": "TO_MODIFY",
+          "description": "공통 유틸리티 (cn 함수 존재)"
+        },
+        {
+          "path": "src/types/til.ts",
+          "type": "REFERENCE",
+          "description": "TilCategory 타입"
+        }
+      ],
+      "implementationGuide": "src/lib/utils.ts에 추가:\\n- formatDate(dateStr: string): string - '2026-02-19' 형식\\n- formatDateGroup(dateStr: string, count: number): string - '2026-02-19 (3개)'\\n- groupTilsByDate(tils: Til[]): Record<string, Til[]> - 날짜 기준 그룹핑\\n- getCategoryColor(category: TilCategory): string - 카테고리별 Tailwind 색상 클래스 반환",
+      "verificationCriteria": "4개 함수 추가, 기존 cn() 유지, TypeScript 에러 없음",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트 전체 개발. Next.js 15.5.3 App Router, TypeScript 5, TailwindCSS v4, shadcn/ui new-york, Notion API 연동. Phase 1 완료 상태에서 Phase 2~5를 순서대로 구현한다."
+    },
+    {
+      "id": "e6c20e33-0b02-4b81-bcdb-a6575f200a77",
+      "name": "Task 009: TIL 카드 컴포넌트 구현",
+      "description": "src/components/til/til-card.tsx 파일을 생성한다. TIL 항목을 카드 형태로 표시하며, 클릭 시 상세 페이지로 이동한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "ec53d20e-598d-4c9c-91fa-ff8b8bc3d983"
+        },
+        {
+          "taskId": "4055dedc-55fe-4473-a6bf-9d7e9f02c80d"
+        }
+      ],
+      "createdAt": "2026-02-25T07:47:46.259Z",
+      "updatedAt": "2026-02-25T07:47:46.259Z",
+      "relatedFiles": [
+        {
+          "path": "src/components/til/til-card.tsx",
+          "type": "CREATE",
+          "description": "TIL 카드 컴포넌트"
+        },
+        {
+          "path": "src/types/til.ts",
+          "type": "REFERENCE",
+          "description": "Til 타입"
+        },
+        {
+          "path": "src/components/ui/card.tsx",
+          "type": "REFERENCE",
+          "description": "shadcn Card 컴포넌트"
+        }
+      ],
+      "implementationGuide": "src/components/til/til-card.tsx 생성:\\n- Props: { til: Til }\\n- next/link의 Link로 /til/[id] 이동\\n- 카드 레이아웃: 제목, 카테고리 배지, 태그 배지, 요약 텍스트\\n- shadcn/ui Card 컴포넌트 활용\\n- 반응형 디자인 (모바일/데스크탑)\\n- Server Component (데이터 fetch 없음, 이벤트 없음)",
+      "verificationCriteria": "Til props 수신, Link로 /til/[id] 이동, 반응형 레이아웃, TypeScript 에러 없음",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트 전체 개발. Next.js 15.5.3 App Router, TypeScript 5, TailwindCSS v4, shadcn/ui new-york, Notion API 연동. Phase 1 완료 상태에서 Phase 2~5를 순서대로 구현한다."
+    },
+    {
+      "id": "28b524f5-073f-4589-9c48-e85d506e1404",
+      "name": "Task 010: 로딩 스켈레톤 컴포넌트 구현",
+      "description": "src/components/til/til-skeleton.tsx 파일을 생성한다. TIL 카드 로딩 중 표시할 스켈레톤 UI를 구현한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "e6c20e33-0b02-4b81-bcdb-a6575f200a77"
+        }
+      ],
+      "createdAt": "2026-02-25T07:47:46.259Z",
+      "updatedAt": "2026-02-25T07:47:46.259Z",
+      "relatedFiles": [
+        {
+          "path": "src/components/til/til-skeleton.tsx",
+          "type": "CREATE",
+          "description": "로딩 스켈레톤"
+        },
+        {
+          "path": "src/components/ui/skeleton.tsx",
+          "type": "REFERENCE",
+          "description": "shadcn Skeleton"
+        }
+      ],
+      "implementationGuide": "src/components/til/til-skeleton.tsx 생성:\\n- TilCardSkeleton: 단일 카드 스켈레톤 (TIL 카드와 동일한 크기)\\n- TilListSkeleton: 여러 카드 스켈레톤 반복 (기본 5개)\\n- shadcn/ui Skeleton 컴포넌트 활용\\n- Server Component",
+      "verificationCriteria": "TilCardSkeleton, TilListSkeleton 2개 export, 카드와 동일한 크기 레이아웃",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트 전체 개발. Next.js 15.5.3 App Router, TypeScript 5, TailwindCSS v4, shadcn/ui new-york, Notion API 연동. Phase 1 완료 상태에서 Phase 2~5를 순서대로 구현한다."
+    },
+    {
+      "id": "4055dedc-55fe-4473-a6bf-9d7e9f02c80d",
+      "name": "Task 011: 카테고리 배지 컴포넌트 구현",
+      "description": "src/components/til/category-badge.tsx 파일을 생성한다. 카테고리별 색상 배지와 태그 배지를 구현한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "ec53d20e-598d-4c9c-91fa-ff8b8bc3d983"
+        }
+      ],
+      "createdAt": "2026-02-25T07:47:46.259Z",
+      "updatedAt": "2026-02-25T07:47:46.259Z",
+      "relatedFiles": [
+        {
+          "path": "src/components/til/category-badge.tsx",
+          "type": "CREATE",
+          "description": "카테고리/태그 배지"
+        },
+        {
+          "path": "src/components/ui/badge.tsx",
+          "type": "REFERENCE",
+          "description": "shadcn Badge"
+        },
+        {
+          "path": "src/types/til.ts",
+          "type": "REFERENCE",
+          "description": "TilCategory 타입"
+        }
+      ],
+      "implementationGuide": "src/components/til/category-badge.tsx 생성:\\n- CategoryBadge: Props { category: TilCategory } - 카테고리별 색상 구분\\n  - Backend: blue, Frontend: green, DevOps: orange, CS: purple\\n- TagBadge: Props { tag: string } - 단일 태그\\n- TagList: Props { tags: string[] } - 다중 태그 목록\\n- shadcn/ui Badge 컴포넌트 활용\\n- getCategoryColor 유틸 함수 활용",
+      "verificationCriteria": "CategoryBadge, TagBadge, TagList 3개 export, 카테고리별 색상 구분, TypeScript 에러 없음",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트 전체 개발. Next.js 15.5.3 App Router, TypeScript 5, TailwindCSS v4, shadcn/ui new-york, Notion API 연동. Phase 1 완료 상태에서 Phase 2~5를 순서대로 구현한다."
+    },
+    {
+      "id": "c3a935c4-5dbf-47df-8a43-0d7d773dcc74",
+      "name": "Task 012: 메인 피드 페이지 구현",
+      "description": "src/app/page.tsx를 TIL 피드 메인 페이지로 교체한다. ISR 적용, getTilList() 호출, 날짜별 그룹핑, 헤더 영역을 구현한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "8447827c-45e6-411e-aa16-30db8a11c549"
+        },
+        {
+          "taskId": "0eddee75-f997-4a5b-8685-cad108cf26ef"
+        },
+        {
+          "taskId": "e6c20e33-0b02-4b81-bcdb-a6575f200a77"
+        },
+        {
+          "taskId": "085c72b0-9f6a-49b4-8825-f4f8205b4510"
+        }
+      ],
+      "createdAt": "2026-02-25T07:48:28.676Z",
+      "updatedAt": "2026-02-25T07:48:28.676Z",
+      "relatedFiles": [
+        {
+          "path": "src/app/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "메인 피드 페이지 (스타터 → TIL 피드로 교체)"
+        },
+        {
+          "path": "src/lib/notion-api.ts",
+          "type": "REFERENCE",
+          "description": "getTilList 함수"
+        },
+        {
+          "path": "src/lib/utils.ts",
+          "type": "REFERENCE",
+          "description": "groupTilsByDate 함수"
+        }
+      ],
+      "implementationGuide": "src/app/page.tsx 교체:\\n- export const revalidate = 60\\n- getTilList() 호출하여 Published TIL 조회\\n- groupTilsByDate()로 날짜별 그룹핑\\n- 헤더: 로고/제목 + GitHub 링크\\n- TilList 컴포넌트 렌더링\\n- Server Component (async)\\n- 기존 HeroSection, FeaturesSection, CTASection 제거",
+      "verificationCriteria": "revalidate=60 설정, TIL 목록 렌더링, 날짜별 그룹 헤더 표시, TypeScript 에러 없음",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트 전체 개발. Phase 3: 핵심 기능 개발."
+    },
+    {
+      "id": "31570d36-e320-4a9b-95eb-75dce4babea9",
+      "name": "Task 013: 카테고리/태그 필터 바 구현",
+      "description": "src/components/til/filter-bar.tsx를 생성한다. 카테고리 단일 선택, 태그 다중 선택, 필터 초기화 버튼을 구현한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "ec53d20e-598d-4c9c-91fa-ff8b8bc3d983"
+        },
+        {
+          "taskId": "4055dedc-55fe-4473-a6bf-9d7e9f02c80d"
+        }
+      ],
+      "createdAt": "2026-02-25T07:48:28.676Z",
+      "updatedAt": "2026-02-25T07:48:28.676Z",
+      "relatedFiles": [
+        {
+          "path": "src/components/til/filter-bar.tsx",
+          "type": "CREATE",
+          "description": "카테고리/태그 필터 바"
+        },
+        {
+          "path": "src/types/til.ts",
+          "type": "REFERENCE",
+          "description": "TilCategory, FilterParams"
+        }
+      ],
+      "implementationGuide": "src/components/til/filter-bar.tsx 생성:\\n- 'use client' (useSearchParams, useRouter 사용)\\n- Props: { categories: TilCategory[], tags: string[], currentCategory?, currentTags? }\\n- 카테고리 버튼: 전체 + 각 카테고리 (단일 선택)\\n- 태그 버튼: 클릭 토글 (다중 선택)\\n- 필터 초기화 버튼\\n- 활성화 상태 시각적 하이라이트\\n- URL 파라미터 업데이트: router.push로 ?category=&tags= 업데이트",
+      "verificationCriteria": "'use client' 선언, 카테고리 단일/태그 다중 선택, URL 파라미터 업데이트, TypeScript 에러 없음",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트 전체 개발. Phase 3: 핵심 기능 개발."
+    },
+    {
+      "id": "085c72b0-9f6a-49b4-8825-f4f8205b4510",
+      "name": "Task 014: TIL 목록 컴포넌트 구현",
+      "description": "src/components/til/til-list.tsx를 생성한다. 날짜 그룹 헤더와 TIL 카드 목록을 렌더링하고, 빈 상태를 처리한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "e6c20e33-0b02-4b81-bcdb-a6575f200a77"
+        },
+        {
+          "taskId": "31570d36-e320-4a9b-95eb-75dce4babea9"
+        }
+      ],
+      "createdAt": "2026-02-25T07:48:28.676Z",
+      "updatedAt": "2026-02-25T07:48:28.676Z",
+      "relatedFiles": [
+        {
+          "path": "src/components/til/til-list.tsx",
+          "type": "CREATE",
+          "description": "TIL 목록 컴포넌트"
+        },
+        {
+          "path": "src/components/til/til-card.tsx",
+          "type": "REFERENCE",
+          "description": "TilCard 컴포넌트"
+        },
+        {
+          "path": "src/lib/utils.ts",
+          "type": "REFERENCE",
+          "description": "formatDateGroup 함수"
+        }
+      ],
+      "implementationGuide": "src/components/til/til-list.tsx 생성:\\n- Props: { groupedTils: Record<string, Til[]> }\\n- 날짜 그룹 헤더: formatDateGroup() 활용 ('2026-02-19 (3개)')\\n- 각 그룹 내 TilCard 목록 렌더링\\n- 빈 상태: 결과 없을 때 안내 메시지\\n- Server Component",
+      "verificationCriteria": "날짜 그룹 헤더 표시, TilCard 렌더링, 빈 상태 메시지, TypeScript 에러 없음",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트 전체 개발. Phase 3: 핵심 기능 개발."
+    },
+    {
+      "id": "9d48981c-2033-44a6-ab75-8edcb3e1a3c7",
+      "name": "Task 015: TIL 상세 페이지 구현",
+      "description": "src/app/til/[id]/page.tsx를 생성한다. ISR 적용, generateStaticParams, 메타 정보, 이전/다음 네비게이션을 구현한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "8447827c-45e6-411e-aa16-30db8a11c549"
+        },
+        {
+          "taskId": "2095da9a-fdc5-4d10-a09a-921b38402b02"
+        }
+      ],
+      "createdAt": "2026-02-25T07:48:28.676Z",
+      "updatedAt": "2026-02-25T07:48:28.676Z",
+      "relatedFiles": [
+        {
+          "path": "src/app/til/[id]/page.tsx",
+          "type": "CREATE",
+          "description": "TIL 상세 페이지"
+        },
+        {
+          "path": "src/lib/notion-api.ts",
+          "type": "REFERENCE",
+          "description": "getTilById, getTilContent, getAllTilIds"
+        }
+      ],
+      "implementationGuide": "src/app/til/[id]/page.tsx 생성:\\n- export const revalidate = 60\\n- generateStaticParams(): getAllTilIds()로 정적 경로 생성\\n- getTilById(id)로 메타 정보 조회, 없으면 notFound()\\n- 메타 정보 표시: 날짜, 카테고리, 태그\\n- '목록으로' Link 버튼\\n- TilContent 컴포넌트로 본문 렌더링\\n- 이전/다음 TIL 네비게이션\\n- Server Component (async)",
+      "verificationCriteria": "revalidate=60, generateStaticParams 구현, 메타 정보 표시, notFound() 처리, TypeScript 에러 없음",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트 전체 개발. Phase 3: 핵심 기능 개발."
+    },
+    {
+      "id": "a8bcbdbc-1fc5-4208-a113-ff0ec1075d7c",
+      "name": "Task 016: 마크다운 렌더링 설정",
+      "description": "react-markdown + remark-gfm 렌더링 설정을 확인하고, notion-to-md 변환 규칙을 검증한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "b5e8a806-9ec7-4417-9942-aab5649eec51"
+        }
+      ],
+      "createdAt": "2026-02-25T07:48:28.676Z",
+      "updatedAt": "2026-02-25T07:48:28.676Z",
+      "relatedFiles": [
+        {
+          "path": "src/components/til/til-content.tsx",
+          "type": "REFERENCE",
+          "description": "마크다운 렌더러 (Task 017에서 생성)"
+        }
+      ],
+      "implementationGuide": "검증 항목:\\n- notion-to-md가 코드블록, 이미지, 링크, 테이블을 올바르게 변환하는지 확인\\n- react-markdown에 remarkPlugins={[remarkGfm]} 설정\\n- 코드 블록 스타일: TailwindCSS로 pre/code 스타일 적용\\n- 이미지: next/image로 렌더링되도록 커스텀 컴포넌트 설정",
+      "verificationCriteria": "remark-gfm 플러그인 설정 확인, 코드블록/이미지/링크/테이블 변환 규칙 검증",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트 전체 개발. Phase 3: 핵심 기능 개발."
+    },
+    {
+      "id": "2095da9a-fdc5-4d10-a09a-921b38402b02",
+      "name": "Task 017: 상세 본문 렌더링 컴포넌트 구현",
+      "description": "src/components/til/til-content.tsx를 생성한다. react-markdown으로 마크다운을 렌더링하고, 코드 블록, 이미지, 링크 등 스타일을 적용한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "a8bcbdbc-1fc5-4208-a113-ff0ec1075d7c"
+        }
+      ],
+      "createdAt": "2026-02-25T07:48:28.676Z",
+      "updatedAt": "2026-02-25T07:48:28.676Z",
+      "relatedFiles": [
+        {
+          "path": "src/components/til/til-content.tsx",
+          "type": "CREATE",
+          "description": "마크다운 본문 렌더러"
+        }
+      ],
+      "implementationGuide": "src/components/til/til-content.tsx 생성:\\n- 'use client' 불필요 (Server Component)\\n- Props: { content: string } (마크다운 문자열)\\n- ReactMarkdown + remarkGfm 플러그인\\n- 커스텀 컴포넌트: img → next/image, a → target=_blank\\n- TailwindCSS prose 스타일 적용 (typography)\\n- 코드 블록: pre/code 배경색 및 padding",
+      "verificationCriteria": "마크다운 렌더링, img→next/image 변환, 코드블록 스타일, TypeScript 에러 없음",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트 전체 개발. Phase 3: 핵심 기능 개발."
+    },
+    {
+      "id": "03403d5a-da9e-45d3-bb8b-04681f9b8d79",
+      "name": "Task 017-1: 핵심 기능 통합 테스트",
+      "description": "Playwright MCP를 사용하여 메인 피드 → 카드 클릭 → 상세 페이지 → 네비게이션 전체 사용자 플로우를 테스트한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "c3a935c4-5dbf-47df-8a43-0d7d773dcc74"
+        },
+        {
+          "taskId": "9d48981c-2033-44a6-ab75-8edcb3e1a3c7"
+        },
+        {
+          "taskId": "2095da9a-fdc5-4d10-a09a-921b38402b02"
+        }
+      ],
+      "createdAt": "2026-02-25T07:48:28.676Z",
+      "updatedAt": "2026-02-25T07:48:28.676Z",
+      "relatedFiles": [
+        {
+          "path": "src/app/page.tsx",
+          "type": "REFERENCE",
+          "description": "메인 피드"
+        },
+        {
+          "path": "src/app/til/[id]/page.tsx",
+          "type": "REFERENCE",
+          "description": "상세 페이지"
+        }
+      ],
+      "implementationGuide": "Playwright MCP 테스트 시나리오:\\n1. 개발 서버 실행 확인 (npm run dev)\\n2. 메인 피드(/) 접속 - TIL 목록 렌더링 확인\\n3. TIL 카드 클릭 - /til/[id] 이동 확인\\n4. 상세 페이지 마크다운 렌더링 확인\\n5. '목록으로' 버튼 - 메인으로 복귀 확인\\n6. 이전/다음 네비게이션 동작 확인",
+      "verificationCriteria": "전체 사용자 플로우 Playwright 테스트 통과, 콘솔 에러 없음",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트 전체 개발. Phase 3: 핵심 기능 개발."
+    },
+    {
+      "id": "2f8cdc4f-e04d-487c-a5a1-ae60b5b8147e",
+      "name": "Task 018: URL 쿼리 파라미터 기반 필터링",
+      "description": "useSearchParams로 필터 상태를 URL과 양방향 동기화한다. 서버 컴포넌트에서 searchParams prop으로 필터링을 처리한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "c3a935c4-5dbf-47df-8a43-0d7d773dcc74"
+        },
+        {
+          "taskId": "31570d36-e320-4a9b-95eb-75dce4babea9"
+        }
+      ],
+      "createdAt": "2026-02-25T07:49:20.077Z",
+      "updatedAt": "2026-02-25T07:49:20.077Z",
+      "relatedFiles": [
+        {
+          "path": "src/app/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "searchParams 필터링 추가"
+        },
+        {
+          "path": "src/components/til/filter-bar.tsx",
+          "type": "TO_MODIFY",
+          "description": "currentCategory/currentTags props 추가"
+        }
+      ],
+      "implementationGuide": "app/page.tsx에 searchParams prop 추가 (Next.js 15 PageProps):\\n- searchParams: { category?: string, tags?: string }\\n- getTilList(filterParams) 호출 시 searchParams 전달\\n- FilterBar에 currentCategory, currentTags prop 전달\\n- 브라우저 뒤로가기/앞으로가기 지원 (URL 기반)\\n- Playwright MCP로 필터링 E2E 테스트",
+      "verificationCriteria": "URL ?category=Backend&tags=react 파라미터로 필터링, 브라우저 뒤로가기 시 필터 상태 유지",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트. Phase 4: 추가 기능 개발, Phase 5: 최적화 및 배포."
+    },
+    {
+      "id": "41d2996d-a799-45f5-ab7b-0a702ba5f7bc",
+      "name": "Task 019: On-Demand Revalidation API 엔드포인트",
+      "description": "src/app/api/revalidate/route.ts를 생성한다. POST 요청으로 특정 경로 재생성을 트리거하며, REVALIDATE_SECRET 토큰으로 인증한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "2b89a43d-5313-461a-a6f3-70fc453588a1"
+        }
+      ],
+      "createdAt": "2026-02-25T07:49:20.077Z",
+      "updatedAt": "2026-02-25T07:49:20.077Z",
+      "relatedFiles": [
+        {
+          "path": "src/app/api/revalidate/route.ts",
+          "type": "CREATE",
+          "description": "On-Demand Revalidation API"
+        },
+        {
+          "path": "src/lib/env.ts",
+          "type": "REFERENCE",
+          "description": "REVALIDATE_SECRET"
+        }
+      ],
+      "implementationGuide": "src/app/api/revalidate/route.ts 생성:\\n- POST handler\\n- Authorization 헤더 또는 query의 secret 검증 (env.REVALIDATE_SECRET)\\n- 인증 실패: 401 반환\\n- revalidatePath('/') 및 revalidatePath('/til/[id]', 'page') 호출\\n- 성공: { revalidated: true, now: Date.now() } 반환",
+      "verificationCriteria": "올바른 secret으로 POST 시 revalidate 성공, 잘못된 secret으로 401 반환",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트. Phase 4: 추가 기능 개발, Phase 5: 최적화 및 배포."
+    },
+    {
+      "id": "933b5aaa-8219-437a-a2d0-0863cc6614d4",
+      "name": "Task 020: 빈 상태(Empty State) UI",
+      "description": "TIL 목록이 비어있을 때와 필터 결과가 없을 때 사용자 친화적 안내 UI를 구현한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "085c72b0-9f6a-49b4-8825-f4f8205b4510"
+        }
+      ],
+      "createdAt": "2026-02-25T07:49:20.077Z",
+      "updatedAt": "2026-02-25T07:49:20.077Z",
+      "relatedFiles": [
+        {
+          "path": "src/components/til/til-list.tsx",
+          "type": "TO_MODIFY",
+          "description": "빈 상태 UI 강화"
+        }
+      ],
+      "implementationGuide": "TilList 컴포넌트 내 빈 상태 처리 강화:\\n- 전체 목록 빈 상태: 아이콘 + '아직 작성된 TIL이 없습니다' 메시지\\n- 필터 결과 없음: 아이콘 + '해당 조건의 TIL이 없습니다' + '필터 초기화' 버튼\\n- Lucide 아이콘 활용 (BookOpen, Search 등)",
+      "verificationCriteria": "빈 목록/필터 결과 없음 두 케이스 안내 메시지 표시, 필터 초기화 링크 동작",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트. Phase 4: 추가 기능 개발, Phase 5: 최적화 및 배포."
+    },
+    {
+      "id": "b46a00d6-e2e9-4e63-aa7a-2400450dacdc",
+      "name": "Task 021: 에러 처리 페이지 구현",
+      "description": "글로벌 에러 페이지, 404 페이지, TIL 상세 404 페이지를 구현한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "c3a935c4-5dbf-47df-8a43-0d7d773dcc74"
+        },
+        {
+          "taskId": "9d48981c-2033-44a6-ab75-8edcb3e1a3c7"
+        }
+      ],
+      "createdAt": "2026-02-25T07:49:20.077Z",
+      "updatedAt": "2026-02-25T07:49:20.077Z",
+      "relatedFiles": [
+        {
+          "path": "src/app/error.tsx",
+          "type": "CREATE",
+          "description": "글로벌 에러 페이지"
+        },
+        {
+          "path": "src/app/not-found.tsx",
+          "type": "CREATE",
+          "description": "404 페이지"
+        },
+        {
+          "path": "src/app/til/[id]/not-found.tsx",
+          "type": "CREATE",
+          "description": "TIL 상세 404"
+        }
+      ],
+      "implementationGuide": "3개 파일 생성:\\n1. src/app/error.tsx - 'use client', error/reset props, 홈으로 버튼\\n2. src/app/not-found.tsx - 404 안내, 홈으로 Link\\n3. src/app/til/[id]/not-found.tsx - TIL 없음 안내, 목록으로 Link\\n- shadcn/ui Button, Card 활용\\n- 사용자 친화적 메시지",
+      "verificationCriteria": "3개 파일 생성, error.tsx는 'use client', notFound() 호출 시 not-found.tsx 렌더링",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트. Phase 4: 추가 기능 개발, Phase 5: 최적화 및 배포."
+    },
+    {
+      "id": "d9241337-3463-4f6c-b146-f239d450dda3",
+      "name": "Task 022: SEO 메타데이터 최적화",
+      "description": "layout.tsx 기본 메타데이터, 메인 피드 메타데이터, 상세 페이지 generateMetadata를 설정한다. OG/Twitter 카드 포함.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "c3a935c4-5dbf-47df-8a43-0d7d773dcc74"
+        },
+        {
+          "taskId": "9d48981c-2033-44a6-ab75-8edcb3e1a3c7"
+        }
+      ],
+      "createdAt": "2026-02-25T07:49:20.077Z",
+      "updatedAt": "2026-02-25T07:49:20.077Z",
+      "relatedFiles": [
+        {
+          "path": "src/app/layout.tsx",
+          "type": "TO_MODIFY",
+          "description": "기본 메타데이터"
+        },
+        {
+          "path": "src/app/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "메인 피드 메타데이터"
+        },
+        {
+          "path": "src/app/til/[id]/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "generateMetadata 추가"
+        }
+      ],
+      "implementationGuide": "3곳 메타데이터 설정:\\n1. src/app/layout.tsx: title, description, openGraph 기본값\\n2. src/app/page.tsx: metadata export\\n3. src/app/til/[id]/page.tsx: generateMetadata() - TIL 제목/내용으로 동적 생성\\n   - title: til.title\\n   - description: til.content (요약)\\n   - openGraph: title, description, type: 'article'\\n   - twitter: card: 'summary'",
+      "verificationCriteria": "generateMetadata 함수 구현, OG/Twitter 태그 생성, TypeScript 에러 없음",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트. Phase 4: 추가 기능 개발, Phase 5: 최적화 및 배포."
+    },
+    {
+      "id": "aef2c64b-7a27-422b-9e93-f8d1cd5e7bf1",
+      "name": "Task 023: 이미지 최적화",
+      "description": "TilContent 마크다운 내 이미지를 next/image로 렌더링하고, 이미지 로드 실패 시 fallback UI를 구현한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "9d48981c-2033-44a6-ab75-8edcb3e1a3c7"
+        },
+        {
+          "taskId": "2095da9a-fdc5-4d10-a09a-921b38402b02"
+        }
+      ],
+      "createdAt": "2026-02-25T07:49:20.077Z",
+      "updatedAt": "2026-02-25T07:49:20.077Z",
+      "relatedFiles": [
+        {
+          "path": "src/components/til/til-content.tsx",
+          "type": "TO_MODIFY",
+          "description": "next/image 최적화 강화"
+        }
+      ],
+      "implementationGuide": "til-content.tsx 커스텀 img 컴포넌트 강화:\\n- width/height 자동 감지 또는 fill 속성 사용\\n- onError 핸들러로 fallback 이미지 표시\\n- loading='lazy' 적용\\n- Notion 이미지 도메인은 next.config.ts에 이미 등록됨",
+      "verificationCriteria": "Notion 이미지 next/image로 렌더링, 로드 실패 시 fallback 표시",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트. Phase 4: 추가 기능 개발, Phase 5: 최적화 및 배포."
+    },
+    {
+      "id": "4c47e9a5-9718-4b00-8321-deb6af29d31d",
+      "name": "Task 024: 코드 품질 검증",
+      "description": "npm run check-all로 타입 검사, ESLint, Prettier를 실행하고 모든 에러를 해결한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "03403d5a-da9e-45d3-bb8b-04681f9b8d79"
+        }
+      ],
+      "createdAt": "2026-02-25T07:49:20.077Z",
+      "updatedAt": "2026-02-25T07:49:20.077Z",
+      "relatedFiles": [
+        {
+          "path": "package.json",
+          "type": "REFERENCE",
+          "description": "check-all 스크립트"
+        }
+      ],
+      "implementationGuide": "npm run check-all 실행 (typecheck + lint + format:check)\\n- TypeScript strict 에러 해결\\n- ESLint 경고/에러 해결\\n- Prettier 포맷 통일\\n- 미사용 import/변수 정리",
+      "verificationCriteria": "npm run check-all 에러 없이 통과",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트. Phase 4: 추가 기능 개발, Phase 5: 최적화 및 배포."
+    },
+    {
+      "id": "b235a586-8158-43c0-8eed-fe47cdc86e64",
+      "name": "Task 025: 프로덕션 빌드 확인",
+      "description": "npm run build로 프로덕션 빌드를 실행하고 빌드 경고/에러를 해결한다. ISR 페이지 생성을 확인한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "4c47e9a5-9718-4b00-8321-deb6af29d31d"
+        }
+      ],
+      "createdAt": "2026-02-25T07:49:20.077Z",
+      "updatedAt": "2026-02-25T07:49:20.077Z",
+      "relatedFiles": [
+        {
+          "path": "next.config.ts",
+          "type": "REFERENCE",
+          "description": "빌드 설정"
+        }
+      ],
+      "implementationGuide": "npm run build 실행\\n- 빌드 에러 해결\\n- ISR 페이지(/，/til/[id]) 정적 생성 확인\\n- 빌드 경고 최소화",
+      "verificationCriteria": "npm run build 성공, ISR 페이지 생성 확인",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트. Phase 4: 추가 기능 개발, Phase 5: 최적화 및 배포."
+    },
+    {
+      "id": "64422627-14e6-41dd-a0f7-de1593ca4314",
+      "name": "Task 026: Vercel 배포 설정",
+      "description": "Vercel 프로젝트를 연결하고 환경변수를 등록한 후 배포 성공을 확인한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "b235a586-8158-43c0-8eed-fe47cdc86e64"
+        }
+      ],
+      "createdAt": "2026-02-25T07:49:20.077Z",
+      "updatedAt": "2026-02-25T07:49:20.077Z",
+      "relatedFiles": [
+        {
+          "path": ".env.example",
+          "type": "REFERENCE",
+          "description": "환경변수 목록"
+        }
+      ],
+      "implementationGuide": "Vercel 배포 절차:\\n1. vercel 프로젝트 연결 (vercel link 또는 GitHub 연동)\\n2. 환경변수 등록: NOTION_API_KEY, NOTION_DATABASE_ID, REVALIDATE_SECRET\\n3. 배포 실행\\n4. 프로덕션 URL에서 정상 동작 확인",
+      "verificationCriteria": "Vercel 배포 성공, 프로덕션 URL에서 TIL 피드 정상 표시",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트. Phase 4: 추가 기능 개발, Phase 5: 최적화 및 배포."
+    },
+    {
+      "id": "2748d338-85a5-48e3-96e8-23043060e79e",
+      "name": "Task 027: Lighthouse 성능 점수 확인",
+      "description": "Lighthouse로 성능 점수를 측정하고 목표 점수(90+)를 달성한다.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "64422627-14e6-41dd-a0f7-de1593ca4314"
+        }
+      ],
+      "createdAt": "2026-02-25T07:49:20.077Z",
+      "updatedAt": "2026-02-25T07:49:20.077Z",
+      "relatedFiles": [
+        {
+          "path": "src/app/layout.tsx",
+          "type": "REFERENCE",
+          "description": "메타데이터 설정"
+        }
+      ],
+      "implementationGuide": "Lighthouse 측정:\\n- Performance, Accessibility, Best Practices, SEO 항목 확인\\n- 목표: 각 항목 90점 이상\\n- 미달 항목 최적화:\\n  - Performance: 이미지 최적화, 코드 스플리팅\\n  - Accessibility: aria 속성, 색상 대비\\n  - SEO: 메타데이터, robots.txt",
+      "verificationCriteria": "Lighthouse 4개 항목 모두 90점 이상 달성",
+      "analysisResult": "ROADMAP.md 기반 Notion CMS TIL 피드 웹사이트. Phase 4: 추가 기능 개발, Phase 5: 최적화 및 배포."
+    }
+  ]
+}
